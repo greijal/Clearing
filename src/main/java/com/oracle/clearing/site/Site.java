@@ -9,8 +9,7 @@ import java.util.stream.Collectors;
 @Component
 public class Site {
 
-    private File file;
-    private char[][] map;
+    private char[][] matrix;
 
     public void load(File file) throws IOException {
 
@@ -20,11 +19,22 @@ public class Site {
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         List<String> lines = reader.lines().collect(Collectors.toList());
-        map= new char[lines.size()][];
+        matrix= new char[lines.size()][];
         lines.forEach(line -> {
-            map[lines.indexOf(line)]= line.toCharArray();
+            matrix[lines.indexOf(line)]= line.toCharArray();
         });
+
+
     }
 
+    public void print(){
+        for (char[] row : matrix) {
+            String str = "|\t";
+            for (char j : row) {
+                str += j + "\t";
+            }
+            System.out.println(str + "|");
+        }
+    }
 
 }
