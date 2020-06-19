@@ -8,3 +8,6 @@
 1592492052190:load /home/greijal/DEV/clearing/spring-shell.log
 1592492137413:help
 1592492219081:load
+1592542855391:load --file /home/greijal/DEV/clearing/src/test/resources/site.txt
+1592543546156:exit
+1592545490497:load /home/greijal/DEV/clearing/src/test/resources/site.txt

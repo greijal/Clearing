@@ -10,12 +10,12 @@ import org.springframework.shell.jline.PromptProvider;
 @SpringBootApplication
 public class ClearingApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ClearingApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ClearingApplication.class, args);
+    }
 
-	@Bean
-	public PromptProvider myPromptProvider() {
-		return () -> new AttributedString("clearing >>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
-	}
+    @Bean
+    public PromptProvider myPromptProvider() {
+        return () -> new AttributedString("clearing >>", AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
+    }
 }
