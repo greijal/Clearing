@@ -1,5 +1,6 @@
-package com.oracle.clearing.site;
+package com.oracle.clearing.site.command;
 
+import com.oracle.clearing.site.Site;
 import com.oracle.clearing.util.ShellUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
@@ -25,7 +26,7 @@ public class SiteCommands {
     @Autowired
     private ShellUtil shellUtil;
 
-    @ShellMethod(value = "Load new site map file", key = {"load"}, group = "site")
+    @ShellMethod(value = "Load new site map file", key = {"load"})
     public void load(@NotNull File file) {
 
         if (!file.exists()) {
@@ -33,7 +34,7 @@ public class SiteCommands {
             return;
         }
 
-        if (site.getMatrix() != null) {
+        if (site.isEmpty()) {
             shellUtil.print(shellUtil.getErrorMessage(ERROR_MESSAGE_SITE_LOAD));
             return;
         }

@@ -111,7 +111,7 @@ public class Bulldozer {
      * @param degrees
      */
     public void turn(int degrees) {
-        int newDegrees =this.direction.value + degrees;
+        int newDegrees = this.direction.value + degrees;
         Direction newDirection = Direction.getByDegrees(newDegrees);
 
         actionsList.add(new ChangeDirection(newDirection));

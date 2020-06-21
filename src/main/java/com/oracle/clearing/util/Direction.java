@@ -31,7 +31,7 @@ public enum Direction {
         return null;
     }
 
-    public Character getSignal(){
+    public Character getSignal() {
 
         switch (this.value) {
             case 0:
@@ -40,7 +40,7 @@ public enum Direction {
                 return '^';
             case 180:
                 return '>';
-            case -90:
+            case 270:
                 return 'v';
         }
         return null;

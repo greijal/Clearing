@@ -1,5 +1,6 @@
-package com.oracle.clearing.site;
+package com.oracle.clearing.site.command;
 
+import com.oracle.clearing.site.Site;
 import com.oracle.clearing.util.ShellUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,7 @@ import org.ujmp.core.charmatrix.impl.ArrayDenseCharMatrix2D;
 import java.io.File;
 import java.io.IOException;
 
-import static com.oracle.clearing.site.SiteCommands.*;
+import static com.oracle.clearing.site.command.SiteCommands.*;
 import static org.mockito.Mockito.*;
 
 
@@ -44,7 +45,7 @@ public class SiteCommandsTest {
 
         File file = mock(File.class);
 
-        when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
+        when(site.isEmpty()).thenReturn(true);
         when(file.exists()).thenReturn(true);
 
         siteCommands.load(file);

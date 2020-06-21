@@ -1,6 +1,7 @@
-package com.oracle.clearing.bulldozer;
+package com.oracle.clearing.bulldozer.command;
 
 
+import com.oracle.clearing.bulldozer.Bulldozer;
 import com.oracle.clearing.report.Report;
 import com.oracle.clearing.site.Site;
 import com.oracle.clearing.site.exception.OutsideBorder;
@@ -13,10 +14,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.shell.ExitRequest;
-import org.springframework.shell.table.Table;
 import org.ujmp.core.charmatrix.impl.ArrayDenseCharMatrix2D;
 
-import static com.oracle.clearing.bulldozer.BulldozerCommands.*;
+import static com.oracle.clearing.bulldozer.command.BulldozerCommands.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -37,7 +37,7 @@ public class BulldozerCommandsTest {
     public void advanceNullSite() throws ProtectAreaTree, OutsideBorder {
 
 
-        when(site.getMatrix()).thenReturn(null);
+        when(site.isEmpty()).thenReturn(true);
 
         bulldozerCommands.advance(1);
 
@@ -59,7 +59,7 @@ public class BulldozerCommandsTest {
     @Test
     public void advance() throws ProtectAreaTree, OutsideBorder {
 
-        when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
+        when(site.isEmpty()).thenReturn(false);
 
         bulldozerCommands.advance(3);
 
@@ -72,53 +72,48 @@ public class BulldozerCommandsTest {
     @Test(expected = ExitRequest.class)
     public void advanceProtectAreaTree() throws ProtectAreaTree, OutsideBorder {
 
-        Table reportTable = mock(Table.class);
 
         Mockito.doThrow(new ProtectAreaTree()).when(bulldozer).advance(3, site);
 
-        when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
-        when(report.report(site, bulldozer, true)).thenReturn(reportTable);
+        when(site.isEmpty()).thenReturn(false);
+        when(report.createReport(site, bulldozer, true)).thenReturn("reportTable");
 
         bulldozerCommands.advance(3);
 
         verify(bulldozer, times(1)).advance(3, site);
         verify(shellUtil, times(1)).getErrorMessage(MESSAGE_MOVE_PROTECT_TREE);
-        verify(report, times(1)).report(site, bulldozer, true);
+        verify(report, times(1)).createReport(site, bulldozer, true);
 
     }
 
     @Test(expected = ExitRequest.class)
     public void advanceOutside() throws ProtectAreaTree, OutsideBorder {
 
-        Table reportTable = mock(Table.class);
-
         Mockito.doThrow(new OutsideBorder()).when(bulldozer).advance(3, site);
-        when(report.report(site, bulldozer, false)).thenReturn(reportTable);
-        when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
+        when(report.createReport(site, bulldozer, false)).thenReturn("");
+        when(site.isEmpty()).thenReturn(false);
 
         bulldozerCommands.advance(3);
 
         verify(bulldozer, times(1)).advance(3, site);
         verify(shellUtil, times(1)).getErrorMessage(MESSAGE_MOVE_OUT);
-        verify(report, times(1)).report(site, bulldozer, false);
+        verify(report, times(1)).createReport(site, bulldozer, false);
 
     }
 
     @Test(expected = ExitRequest.class)
     public void advanceAll() throws ProtectAreaTree, OutsideBorder {
 
-        Table reportTable = mock(Table.class);
 
         when(bulldozer.isCompletedWork(site)).thenReturn(true);
-        when(report.report(site, bulldozer, false)).thenReturn(reportTable);
-        when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
 
+        when(site.isEmpty()).thenReturn(false);
 
         bulldozerCommands.advance(3);
 
         verify(bulldozer, times(1)).advance(3, site);
         verify(shellUtil, times(1)).getSuccessMessage(MESSAGE_MOVE_ALL);
-        verify(report, times(1)).report(site, bulldozer, false);
+        verify(report, times(1)).createReport(site, bulldozer, false);
 
     }
 
@@ -126,7 +121,7 @@ public class BulldozerCommandsTest {
     @Test
     public void turnLeft() {
 
-        when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
+        when(site.isEmpty()).thenReturn(false);
 
         bulldozerCommands.turnLeft();
         verify(bulldozer, times(1)).turn(-90);
@@ -137,7 +132,7 @@ public class BulldozerCommandsTest {
     @Test
     public void turnLeftNullSite() {
 
-        when(site.getMatrix()).thenReturn(null);
+        when(site.isEmpty()).thenReturn(true);
 
         bulldozerCommands.turnLeft();
         verify(bulldozer, never()).turn(anyInt());
@@ -150,7 +145,7 @@ public class BulldozerCommandsTest {
     @Test
     public void turnRightNullSite() {
 
-        when(site.getMatrix()).thenReturn(null);
+        when(site.isEmpty()).thenReturn(true);
 
         bulldozerCommands.turnRight();
         verify(bulldozer, never()).turn(anyInt());
@@ -161,7 +156,7 @@ public class BulldozerCommandsTest {
     @Test
     public void turnRight() {
 
-        when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
+        when(site.isEmpty()).thenReturn(false);
 
         bulldozerCommands.turnRight();
         verify(bulldozer, times(1)).turn(90);

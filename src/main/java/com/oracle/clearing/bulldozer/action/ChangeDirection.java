@@ -10,4 +10,9 @@ public class ChangeDirection extends Action {
         super(Action.CHANGE_DIRECTION);
         this.direction = direction;
     }
+
+    @Override
+    public String toString() {
+        return "turn " + this.direction.name();
+    }
 }

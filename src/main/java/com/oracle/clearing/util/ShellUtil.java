@@ -18,7 +18,7 @@ public class ShellUtil {
     }
 
     public String getInfoMessage(String message) {
-        return getColored(message, AttributedStyle.CYAN);
+        return getColored(message, AttributedStyle.WHITE);
     }
 
     public String getSuccessMessage(String message) {

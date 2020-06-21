@@ -1,5 +1,6 @@
-package com.oracle.clearing.bulldozer;
+package com.oracle.clearing.bulldozer.command;
 
+import com.oracle.clearing.bulldozer.Bulldozer;
 import com.oracle.clearing.report.Report;
 import com.oracle.clearing.site.Site;
 import com.oracle.clearing.site.exception.OutsideBorder;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.table.Table;
 
 import javax.validation.constraints.NotNull;
 
@@ -37,7 +37,7 @@ public class BulldozerCommands {
     @Autowired
     private ShellUtil shellUtil;
 
-    @ShellMethod(value = "Move Bulldozer", key = {"advance", "a"}, group = "bulldozer")
+    @ShellMethod(value = "Move Bulldozer", key = {"advance", "a"})
     public void advance(@NotNull Integer number) throws ExitRequest {
 
         if (number == 0) {
@@ -45,7 +45,7 @@ public class BulldozerCommands {
             return;
         }
 
-        if (site.getMatrix() == null) {
+        if (site.isEmpty()) {
             shellUtil.print(shellUtil.getWarningMessage(MESSAGE_MATRIX_NUL));
             return;
         }
@@ -53,27 +53,27 @@ public class BulldozerCommands {
         try {
             bulldozer.advance(number, site);
         } catch (ProtectAreaTree protectAreaTree) {
-            Table result = report.report(site, bulldozer, true);
+            String result = report.createReport(site, bulldozer, true);
 
             shellUtil.print(shellUtil.getErrorMessage(MESSAGE_MOVE_PROTECT_TREE));
-            shellUtil.print(shellUtil.getInfoMessage(result.render(80)));
+            shellUtil.print(shellUtil.getInfoMessage(result));
 
             throw new ExitRequest(1);
 
         } catch (OutsideBorder outsideBorder) {
-            Table result = report.report(site, bulldozer, false);
+            String result = report.createReport(site, bulldozer, false);
 
             shellUtil.print(shellUtil.getErrorMessage(MESSAGE_MOVE_OUT));
-            shellUtil.print(shellUtil.getInfoMessage(result.render(80)));
+            shellUtil.print(shellUtil.getInfoMessage(result));
 
             throw new ExitRequest(1);
         }
 
         if (bulldozer.isCompletedWork(site)) {
-            Table result = report.report(site, bulldozer, false);
+            String result = report.createReport(site, bulldozer, false);
 
             shellUtil.print(shellUtil.getSuccessMessage(MESSAGE_MOVE_ALL));
-            shellUtil.print(shellUtil.getInfoMessage(result.render(80)));
+            shellUtil.print(shellUtil.getInfoMessage(result));
 
             throw new ExitRequest();
         }
@@ -84,10 +84,10 @@ public class BulldozerCommands {
     }
 
 
-    @ShellMethod(value = "Turn bulldozer left ", key = {"left", "l"}, group = "bulldozer")
+    @ShellMethod(value = "Turn bulldozer left ", key = {"left", "l"})
     public void turnLeft() {
 
-        if (site.getMatrix() == null) {
+        if (site.isEmpty()) {
             shellUtil.print(shellUtil.getWarningMessage(MESSAGE_MATRIX_NUL));
             return;
         }
@@ -99,10 +99,10 @@ public class BulldozerCommands {
 
     }
 
-    @ShellMethod(value = "Turn bulldozer right ", key = {"right", "r"}, group = "bulldozer")
+    @ShellMethod(value = "Turn bulldozer right ", key = {"right", "r"})
     public void turnRight() {
 
-        if (site.getMatrix() == null) {
+        if (site.isEmpty()) {
             shellUtil.print(shellUtil.getWarningMessage(MESSAGE_MATRIX_NUL));
             return;
         }

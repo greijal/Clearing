@@ -4,9 +4,13 @@ import com.oracle.clearing.bulldozer.Bulldozer;
 import com.oracle.clearing.bulldozer.action.Action;
 import com.oracle.clearing.bulldozer.action.Move;
 import com.oracle.clearing.site.Site;
-import org.springframework.shell.table.*;
+import org.springframework.shell.table.ArrayTableModel;
+import org.springframework.shell.table.BorderStyle;
+import org.springframework.shell.table.TableBuilder;
+import org.springframework.shell.table.TableModel;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -20,8 +24,18 @@ public class Report {
     private static final long PROTECTED_TREE_COST = 10;
 
 
-    public Table report(Site site, Bulldozer bulldozer, boolean penalty) {
+    public String createReport(Site site, Bulldozer bulldozer, boolean penalty) {
 
+        StringBuilder report = new StringBuilder();
+        report.append(createHistoryReport(bulldozer));
+        report.append("\n\n");
+        report.append(createCostReport(site, bulldozer, penalty));
+
+        return report.toString();
+    }
+
+
+    private String createCostReport(Site site, Bulldozer bulldozer, boolean penalty) {
 
         String[][] data = new String[7][];
 
@@ -33,15 +47,34 @@ public class Report {
         data[5] = createRowDamage(bulldozer);
         data[6] = createTotalRow(data);
 
-
         TableModel model = new ArrayTableModel(data);
 
         TableBuilder tableBuilder = new TableBuilder(model);
         tableBuilder.addInnerBorder(BorderStyle.fancy_light);
         tableBuilder.addHeaderBorder(BorderStyle.fancy_double);
 
-        return tableBuilder.build();
+        return tableBuilder.build().render(128);
 
+    }
+
+    private String createHistoryReport(Bulldozer bulldozer) {
+
+        String actions = bulldozer.getActionsList()
+                .stream()
+                .map(action -> action.toString())
+                .collect(Collectors.joining(", "));
+
+
+        String[][] data = new String[2][];
+
+        data[0] = new String[]{"These are the commands you issued:"};
+        data[1] = new String[]{actions};
+
+        TableModel model = new ArrayTableModel(data);
+        TableBuilder tableBuilder = new TableBuilder(model);
+        tableBuilder.addInnerBorder(BorderStyle.air);
+
+        return tableBuilder.build().render(128);
     }
 
     private String[] createTotalRow(String[][] dataTable) {
@@ -60,7 +93,7 @@ public class Report {
         return new String[]{name, String.valueOf(quantity), String.valueOf(cost)};
     }
 
-    public long calculateDamageQuantity(Bulldozer bulldozer) {
+    protected long calculateDamageQuantity(Bulldozer bulldozer) {
         return bulldozer.getActionsList()
                 .stream()
                 .filter(action -> action.getActionType() == Action.MOVE)
@@ -68,7 +101,7 @@ public class Report {
                 .sum();
     }
 
-    public long calculateDamageCost(long quantity) {
+    protected long calculateDamageCost(long quantity) {
         return quantity * DAMAGE_COST;
     }
 
@@ -81,7 +114,7 @@ public class Report {
         return new String[]{name, String.valueOf(quantity), String.valueOf(cost)};
     }
 
-    public long calculateProtectedTreeCost(long quantity) {
+    private long calculateProtectedTreeCost(long quantity) {
         return quantity * PROTECTED_TREE_COST;
     }
 
@@ -98,7 +131,7 @@ public class Report {
                 getUnVisitLend().size();
     }
 
-    public long calculateUnclearedSquaresCost(long quantity) {
+    protected long calculateUnclearedSquaresCost(long quantity) {
         return quantity * UNCLEARED_COST;
     }
 
@@ -110,7 +143,7 @@ public class Report {
         return new String[]{name, String.valueOf(quantity), String.valueOf(cost)};
     }
 
-    public long calculateFuelQuantity(Bulldozer bulldozer) {
+    protected long calculateFuelQuantity(Bulldozer bulldozer) {
         return bulldozer
                 .getActionsList()
                 .stream()
@@ -119,7 +152,7 @@ public class Report {
                 .sum();
     }
 
-    public long calculateFuelCost(long quantity) {
+    protected long calculateFuelCost(long quantity) {
         return quantity * FUEL_COST;
     }
 
@@ -130,11 +163,11 @@ public class Report {
         return new String[]{name, String.valueOf(quantity), String.valueOf(cost)};
     }
 
-    public long calculateCommunicationQuantity(Bulldozer bulldozer) {
+    protected long calculateCommunicationQuantity(Bulldozer bulldozer) {
         return bulldozer.getActionsList().size();
     }
 
-    public long calculateCommunicationCost(long quantity) {
+    protected long calculateCommunicationCost(long quantity) {
         return quantity * COMMUNICATION_COST;
     }
 

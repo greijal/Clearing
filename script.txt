@@ -1,0 +1,10 @@
+load site.txt
+a 4
+r
+a 4
+l
+a 2
+a 4
+l
+report
+q

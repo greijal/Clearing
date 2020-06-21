@@ -24,7 +24,6 @@ public class Site {
 
     private Matrix2D matrix;
 
-
     /**
      * Load site file
      *
@@ -121,6 +120,10 @@ public class Site {
 
 
         return stringMap(matrix);
+    }
+
+    public boolean isEmpty() {
+        return matrix==null;
     }
 
     public Matrix2D getMatrix() {

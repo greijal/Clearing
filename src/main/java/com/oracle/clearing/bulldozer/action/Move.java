@@ -6,13 +6,17 @@ import java.util.stream.IntStream;
 
 public class Move extends Action {
 
+    private final List<Character> lends;
     private final int fuel;
     private final int damage;
 
+
     public Move(List<Character> lends) {
         super(Action.MOVE);
+
         this.fuel = calculateFuel(lends);
         this.damage = calculateDamage(lends);
+        this.lends = lends;
     }
 
     private static int calculateDamage(List<Character> lends) {
@@ -49,5 +53,10 @@ public class Move extends Action {
 
     public int getDamage() {
         return damage;
+    }
+
+    @Override
+    public String toString() {
+        return "advance " + this.lends.size();
     }
 }

@@ -9,7 +9,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 
-
 public class MoveTest {
 
     @Test

@@ -22,7 +22,7 @@ public class ShellUtilTest {
 
     @Test
     public void getInfoMessage() {
-        assertEquals("\u001B[36mTEST\u001B[0m", shellUtil.getInfoMessage("TEST"));
+        assertEquals("\u001B[37mTEST\u001B[0m", shellUtil.getInfoMessage("TEST"));
     }
 
     @Test
