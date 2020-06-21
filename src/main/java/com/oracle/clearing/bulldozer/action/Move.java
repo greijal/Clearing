@@ -33,7 +33,7 @@ public class Move extends Action {
     private static int toFuel(Character character) {
         switch (character) {
             case 'o':
-            case 'x':
+            case '#':
                 return 1;
             case 'r':
             case 't':

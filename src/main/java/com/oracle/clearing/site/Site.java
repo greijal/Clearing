@@ -2,6 +2,7 @@ package com.oracle.clearing.site;
 
 import com.oracle.clearing.site.exception.OutsideBorder;
 import com.oracle.clearing.site.exception.ProtectAreaTree;
+import com.oracle.clearing.util.Direction;
 import org.springframework.shell.table.ArrayTableModel;
 import org.springframework.shell.table.TableBuilder;
 import org.springframework.shell.table.TableModel;
@@ -43,8 +44,8 @@ public class Site {
     }
 
     /**
-     *
      * Mark lend visited
+     *
      * @param row
      * @param col
      * @return
@@ -77,13 +78,13 @@ public class Site {
         return StreamSupport
                 .stream(matrix.allValues().spliterator(), false)
                 .map(o -> (Character) o)
-                .filter(character -> 'x' != character)
+                .filter(character -> '#' != character)
                 .filter(character -> 'T' != character)
                 .collect(Collectors.toList());
     }
 
     private void markAsVisited(long row, long col) {
-        matrix.setAsChar('x', row, col);
+        matrix.setAsChar('#', row, col);
     }
 
 
@@ -102,21 +103,23 @@ public class Site {
         data[5] = new String[]{"r - Rocky land"};
         data[6] = new String[]{"t - Removable trees"};
         data[7] = new String[]{"T - Preserved trees"};
-        data[8] = new String[]{"* - Your location"};
-        data[9] = new String[]{"X - Visited"};
+        data[8] = new String[]{"< | > | ^ | v - Your location"};
+        data[9] = new String[]{"# - Visited"};
 
 
         TableModel model = new ArrayTableModel(data);
-
         TableBuilder tableBuilder = new TableBuilder(model);
 
-        return tableBuilder.build().render(80);
+
+        return tableBuilder.build().render(1024);
     }
 
 
-    public String getMyLocation(long row, long col) {
+    public String getMyLocation(long row, long col, Direction direction) {
         Matrix matrix = this.matrix.clone();
-        matrix.setAsChar('*', row, col);
+        matrix.setAsChar(direction.getSignal(), row, col);
+
+
         return stringMap(matrix);
     }
 

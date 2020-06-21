@@ -1,12 +1,13 @@
 package com.oracle.clearing.bulldozer.action;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.Assert.assertEquals;
+
 
 
 public class MoveTest {
@@ -19,16 +20,16 @@ public class MoveTest {
         assertEquals(0, action.getDamage());
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void createMoveNull() {
-        assertThrows(NullPointerException.class, () -> new Move(null));
+        new Move(null);
     }
 
     @Test
     public void createMove() {
 
         List<Character> lends = new LinkedList<>();
-        lends.add('x');
+        lends.add('#');
         lends.add('o');
         lends.add('o');
         lends.add('o');
@@ -57,7 +58,7 @@ public class MoveTest {
         List<Character> lends = new LinkedList<>();
         lends.add('@');
         lends.add('*');
-        lends.add('#');
+        lends.add('%');
         lends.add('&');
 
         Move action = new Move(lends);

@@ -20,11 +20,11 @@ import static com.oracle.clearing.util.Direction.*;
 public class Bulldozer {
 
     private Direction direction = RIGHT;
-    private Position lestPosition = new Position(0L, 0L);
+    private Position lestPosition = new Position(0L, -1L);
     private List<Action> actionsList = new ArrayList<>();
 
     /**
-     * Walk the tractor on the site
+     * Walk the Bulldozer on the site
      *
      * @param numberSteps
      * @param site
@@ -41,8 +41,23 @@ public class Bulldozer {
 
         List<Character> lends = new ArrayList<>();
 
+
         for (Position step : steps) {
-            lends.add(site.visit(step.getRow(), step.getColumn()));
+            try {
+                lends.add(site.visit(step.getRow(), step.getColumn()));
+            } catch (OutsideBorder e) {
+
+                actionsList.add(new Move(lends));
+                this.lestPosition = step;
+                throw e;
+
+            } catch (ProtectAreaTree e) {
+
+                actionsList.add(new Move(lends));
+                this.lestPosition = step;
+                throw e;
+
+            }
         }
 
         actionsList.add(new Move(lends));
@@ -96,7 +111,9 @@ public class Bulldozer {
      * @param degrees
      */
     public void turn(int degrees) {
-        Direction newDirection = Direction.getByDegrees(direction.value + degrees);
+        int newDegrees =this.direction.value + degrees;
+        Direction newDirection = Direction.getByDegrees(newDegrees);
+
         actionsList.add(new ChangeDirection(newDirection));
         this.direction = newDirection;
     }
@@ -119,7 +136,7 @@ public class Bulldozer {
      * @return
      */
     public String findMe(Site site) {
-        return site.getMyLocation(lestPosition.getRow(), lestPosition.getColumn());
+        return site.getMyLocation(lestPosition.getRow(), lestPosition.getColumn(), this.direction);
     }
 
     public List<Action> getActionsList() {

@@ -1,14 +1,19 @@
 # Site Clearing Simulation
 
-Shelll system to simulate land clearing
+Shell system to simulate land clearing
 
-Veersion : 0.0.1-SNAPSHOT
+
+![Alt text](src/main/resources/img.png?raw=true "Title")
+
+
+Version : 0.0.1-SNAPSHOT
 
 - Java 1.8
 - Spring Shell
 - Mockito
 - Junit
 - Gradle
+
 
 
 ### Build
@@ -19,8 +24,13 @@ Veersion : 0.0.1-SNAPSHOT
 ### Running
 
 ```
-java -jar build/libs/clearing-0.0.1-SNAPSHOT.jar 
+make run
 ```
+or 
+```
+java -jar clearing-0.0.1-SNAPSHOT.jar
+```
+
 
 ### Commands
 ```

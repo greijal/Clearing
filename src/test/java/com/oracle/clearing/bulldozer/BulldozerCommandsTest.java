@@ -126,15 +126,42 @@ public class BulldozerCommandsTest {
     @Test
     public void turnLeft() {
 
+        when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
+
         bulldozerCommands.turnLeft();
         verify(bulldozer, times(1)).turn(-90);
         verify(shellUtil, times(1)).getSuccessMessage(MESSAGE_TURN_LEFT);
 
     }
 
+    @Test
+    public void turnLeftNullSite() {
+
+        when(site.getMatrix()).thenReturn(null);
+
+        bulldozerCommands.turnLeft();
+        verify(bulldozer, never()).turn(anyInt());
+        verify(shellUtil, times(1)).getWarningMessage(MESSAGE_MATRIX_NUL);
+
+
+    }
+
+
+    @Test
+    public void turnRightNullSite() {
+
+        when(site.getMatrix()).thenReturn(null);
+
+        bulldozerCommands.turnRight();
+        verify(bulldozer, never()).turn(anyInt());
+        verify(shellUtil, times(1)).getWarningMessage(MESSAGE_MATRIX_NUL);
+
+    }
 
     @Test
     public void turnRight() {
+
+        when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
 
         bulldozerCommands.turnRight();
         verify(bulldozer, times(1)).turn(90);

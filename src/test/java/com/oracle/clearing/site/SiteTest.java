@@ -2,6 +2,7 @@ package com.oracle.clearing.site;
 
 import com.oracle.clearing.site.exception.OutsideBorder;
 import com.oracle.clearing.site.exception.ProtectAreaTree;
+import com.oracle.clearing.util.Direction;
 import org.junit.Test;
 import org.ujmp.core.charmatrix.impl.ArrayDenseCharMatrix2D;
 
@@ -73,7 +74,7 @@ public class SiteTest {
         char result = site.visit(0L, 0L);
 
         assertEquals('o', result);
-        assertEquals('x', site.getMatrix().getAsChar(0, 0));
+        assertEquals('#', site.getMatrix().getAsChar(0, 0));
     }
 
     @Test
@@ -82,7 +83,7 @@ public class SiteTest {
 
         char[] map = new char[2];
         map[0] = 'o';
-        map[1] = 'x';
+        map[1] = '#';
 
         site.setMatrix(new ArrayDenseCharMatrix2D(map));
 
@@ -100,17 +101,17 @@ public class SiteTest {
 
         site.setMatrix(new ArrayDenseCharMatrix2D(map));
 
-        String result = site.getMyLocation(0l, 0l);
-        assertEquals("                   \n" +
-                "*                  \n" +
-                "Caption            \n" +
-                "                   \n" +
-                "o - Plain land     \n" +
-                "r - Rocky land     \n" +
-                "t - Removable trees\n" +
-                "T - Preserved trees\n" +
-                "* - Your location  \n" +
-                "X - Visited        \n", result);
+        String result = site.getMyLocation(0l, 0l, Direction.RIGHT);
+        assertEquals("                             \n" +
+                ">                            \n" +
+                "Caption                      \n" +
+                "                             \n" +
+                "o - Plain land               \n" +
+                "r - Rocky land               \n" +
+                "t - Removable trees          \n" +
+                "T - Preserved trees          \n" +
+                "< | > | ^ | v - Your location\n" +
+                "# - Visited                  \n", result);
 
     }
 
@@ -125,16 +126,16 @@ public class SiteTest {
         site.setMatrix(new ArrayDenseCharMatrix2D(map));
 
         String result = site.stringMap();
-        assertEquals("                   \n" +
-                "o                  \n" +
-                "Caption            \n" +
-                "                   \n" +
-                "o - Plain land     \n" +
-                "r - Rocky land     \n" +
-                "t - Removable trees\n" +
-                "T - Preserved trees\n" +
-                "* - Your location  \n" +
-                "X - Visited        \n", result);
+        assertEquals("                             \n" +
+                "o                            \n" +
+                "Caption                      \n" +
+                "                             \n" +
+                "o - Plain land               \n" +
+                "r - Rocky land               \n" +
+                "t - Removable trees          \n" +
+                "T - Preserved trees          \n" +
+                "< | > | ^ | v - Your location\n" +
+                "# - Visited                  \n", result);
 
     }
 }

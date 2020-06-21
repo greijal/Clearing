@@ -87,16 +87,30 @@ public class BulldozerCommands {
     @ShellMethod(value = "Turn bulldozer left ", key = {"left", "l"}, group = "bulldozer")
     public void turnLeft() {
 
+        if (site.getMatrix() == null) {
+            shellUtil.print(shellUtil.getWarningMessage(MESSAGE_MATRIX_NUL));
+            return;
+        }
+
         bulldozer.turn(-90);
         shellUtil.print(shellUtil.getSuccessMessage(MESSAGE_TURN_LEFT));
+        shellUtil.print(shellUtil.getInfoMessage(bulldozer.findMe(site)));
+
 
     }
 
     @ShellMethod(value = "Turn bulldozer right ", key = {"right", "r"}, group = "bulldozer")
     public void turnRight() {
 
+        if (site.getMatrix() == null) {
+            shellUtil.print(shellUtil.getWarningMessage(MESSAGE_MATRIX_NUL));
+            return;
+        }
+
         bulldozer.turn(90);
         shellUtil.print(shellUtil.getSuccessMessage(MESSAGE_TURN_RIGHT));
+        shellUtil.print(shellUtil.getInfoMessage(bulldozer.findMe(site)));
+
 
     }
 

@@ -228,7 +228,7 @@ public class BulldozerTest {
         Bulldozer bulldozer = new Bulldozer();
         String map = "MAP";
 
-        when(site.getMyLocation(0l, 0l)).thenReturn(map);
+        when(site.getMyLocation(0l, -1l, bulldozer.getDirection())).thenReturn(map);
         bulldozer.findMe(site);
 
         assertNotNull(bulldozer.findMe(site));
