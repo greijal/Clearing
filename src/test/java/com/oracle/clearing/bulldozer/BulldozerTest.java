@@ -5,7 +5,6 @@ import com.oracle.clearing.site.Site;
 import com.oracle.clearing.site.exception.OutsideBorder;
 import com.oracle.clearing.site.exception.ProtectAreaTree;
 import com.oracle.clearing.util.Direction;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -24,10 +23,10 @@ public class BulldozerTest {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
 
-        ImmutablePair<Long, Long> lestPosition = bulldozer.lestPosition;
+        Bulldozer.Position lestPosition = bulldozer.getLestPosition();
 
         bulldozer.advance(0, site);
-        ImmutablePair<Long, Long> newPosition = bulldozer.lestPosition;
+        Bulldozer.Position newPosition = bulldozer.getLestPosition();
 
         assertEquals(lestPosition, newPosition);
     }
@@ -37,15 +36,15 @@ public class BulldozerTest {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
 
-        bulldozer.direction = Direction.RIGHT;
-        ImmutablePair<Long, Long> lestPosition = bulldozer.lestPosition;
+        bulldozer.setDirection(Direction.RIGHT);
+        Bulldozer.Position lestPosition = bulldozer.getLestPosition();
 
 
         bulldozer.advance(3, site);
 
-        ImmutablePair<Long, Long> newPosition = bulldozer.lestPosition;
+        Bulldozer.Position newPosition = bulldozer.getLestPosition();
 
-        assertTrue(lestPosition.getValue() < newPosition.getValue());
+        assertTrue(lestPosition.getColumn() < newPosition.getColumn());
 
     }
 
@@ -54,14 +53,15 @@ public class BulldozerTest {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
 
-        bulldozer.direction = Direction.LEFT;
-        ImmutablePair<Long, Long> lestPosition = bulldozer.lestPosition;
+        bulldozer.setDirection(Direction.LEFT);
+
+        Bulldozer.Position lestPosition = bulldozer.getLestPosition();
 
         bulldozer.advance(3, site);
 
-        ImmutablePair<Long, Long> newPosition = bulldozer.lestPosition;
+        Bulldozer.Position newPosition = bulldozer.getLestPosition();
 
-        assertTrue(lestPosition.getValue() > newPosition.getValue());
+        assertTrue(lestPosition.getColumn() > newPosition.getColumn());
     }
 
     @Test
@@ -69,14 +69,15 @@ public class BulldozerTest {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
 
-        bulldozer.direction = Direction.UP;
-        ImmutablePair<Long, Long> lestPosition = bulldozer.lestPosition;
+        bulldozer.setDirection(Direction.UP);
+
+        Bulldozer.Position lestPosition = bulldozer.getLestPosition();
 
         bulldozer.advance(3, site);
 
-        ImmutablePair<Long, Long> newPosition = bulldozer.lestPosition;
+        Bulldozer.Position newPosition = bulldozer.getLestPosition();
 
-        assertTrue(lestPosition.getKey() > newPosition.getKey());
+        assertTrue(lestPosition.getRow() > newPosition.getRow());
     }
 
     @Test
@@ -84,14 +85,15 @@ public class BulldozerTest {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
 
-        bulldozer.direction = Direction.DOWN;
-        ImmutablePair<Long, Long> lestPosition = bulldozer.lestPosition;
+        bulldozer.setDirection(Direction.DOWN);
+
+        Bulldozer.Position lestPosition = bulldozer.getLestPosition();
 
         bulldozer.advance(3, site);
 
-        ImmutablePair<Long, Long> newPosition = bulldozer.lestPosition;
+        Bulldozer.Position newPosition = bulldozer.getLestPosition();
 
-        assertTrue(lestPosition.getKey() < newPosition.getKey());
+        assertTrue(lestPosition.getRow() < newPosition.getRow());
     }
 
     @Test(expected = OutsideBorder.class)
@@ -99,7 +101,7 @@ public class BulldozerTest {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
 
-        bulldozer.direction = Direction.DOWN;
+        bulldozer.setDirection(Direction.DOWN);
 
         when(site.visit(anyLong(), anyLong())).thenThrow(new OutsideBorder());
         bulldozer.advance(3, site);
@@ -111,7 +113,7 @@ public class BulldozerTest {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
 
-        bulldozer.direction = Direction.DOWN;
+        bulldozer.setDirection(Direction.DOWN);
 
         when(site.visit(anyLong(), anyLong())).thenThrow(new ProtectAreaTree());
         bulldozer.advance(3, site);
@@ -122,9 +124,10 @@ public class BulldozerTest {
     public void turnNegative90Right() {
         Bulldozer bulldozer = new Bulldozer();
 
-        bulldozer.direction = Direction.RIGHT;
+        bulldozer.setDirection(Direction.RIGHT);
+
         bulldozer.turn(-90);
-        assertEquals(Direction.UP, bulldozer.direction);
+        assertEquals(Direction.UP, bulldozer.getDirection());
     }
 
 
@@ -132,37 +135,39 @@ public class BulldozerTest {
     public void turnNegative90Left() {
         Bulldozer bulldozer = new Bulldozer();
 
-        bulldozer.direction = Direction.LEFT;
+        bulldozer.setDirection(Direction.LEFT);
+
         bulldozer.turn(-90);
-        assertEquals(Direction.DOWN, bulldozer.direction);
+        assertEquals(Direction.DOWN, bulldozer.getDirection());
     }
 
     @Test
     public void turnNegative90Down() {
         Bulldozer bulldozer = new Bulldozer();
 
-        bulldozer.direction = Direction.DOWN;
+        bulldozer.setDirection(Direction.DOWN);
         bulldozer.turn(-90);
-        assertEquals(Direction.RIGHT, bulldozer.direction);
+        assertEquals(Direction.RIGHT, bulldozer.getDirection());
     }
 
     @Test
     public void turnNegative90Up() {
         Bulldozer bulldozer = new Bulldozer();
 
-        bulldozer.direction = Direction.UP;
+        bulldozer.setDirection(Direction.UP);
+
         bulldozer.turn(-90);
-        assertEquals(Direction.LEFT, bulldozer.direction);
+        assertEquals(Direction.LEFT, bulldozer.getDirection());
     }
 
     @Test
     public void turn90Right() {
         Bulldozer bulldozer = new Bulldozer();
 
-        bulldozer.direction = Direction.RIGHT;
+        bulldozer.setDirection(Direction.RIGHT);
         bulldozer.turn(90);
 
-        assertEquals(Direction.DOWN, bulldozer.direction);
+        assertEquals(Direction.DOWN, bulldozer.getDirection());
     }
 
 
@@ -170,26 +175,30 @@ public class BulldozerTest {
     public void turn90Left() {
         Bulldozer bulldozer = new Bulldozer();
 
-        bulldozer.direction = Direction.LEFT;
+        bulldozer.setDirection(Direction.LEFT);
+
         bulldozer.turn(90);
-        assertEquals(Direction.UP, bulldozer.direction);
+        assertEquals(Direction.UP, bulldozer.getDirection());
     }
 
     @Test
     public void turn90Down() {
         Bulldozer bulldozer = new Bulldozer();
 
-        bulldozer.direction = Direction.DOWN;
+
+        bulldozer.setDirection(Direction.DOWN);
+
         bulldozer.turn(90);
-        assertEquals(Direction.LEFT, bulldozer.direction);
+        assertEquals(Direction.LEFT, bulldozer.getDirection());
     }
 
     @Test
     public void turn90Up() {
         Bulldozer bulldozer = new Bulldozer();
-        bulldozer.direction = Direction.UP;
+        bulldozer.setDirection(Direction.UP);
+
         bulldozer.turn(90);
-        assertEquals(Direction.RIGHT, bulldozer.direction);
+        assertEquals(Direction.RIGHT, bulldozer.getDirection());
     }
 
     @Test
@@ -198,7 +207,7 @@ public class BulldozerTest {
         Site site = mock(Site.class);
         Bulldozer bulldozer = new Bulldozer();
 
-        when(site.getUnVisitPoints()).thenReturn(Collections.EMPTY_LIST);
+        when(site.getUnVisitLend()).thenReturn(Collections.EMPTY_LIST);
         assertTrue(bulldozer.isCompletedWork(site));
     }
 
@@ -208,7 +217,7 @@ public class BulldozerTest {
         Site site = mock(Site.class);
         Bulldozer bulldozer = new Bulldozer();
 
-        when(site.getUnVisitPoints()).thenReturn(Collections.singletonList('o'));
+        when(site.getUnVisitLend()).thenReturn(Collections.singletonList('o'));
         assertFalse(bulldozer.isCompletedWork(site));
     }
 
@@ -219,7 +228,7 @@ public class BulldozerTest {
         Bulldozer bulldozer = new Bulldozer();
         String map = "MAP";
 
-        when(site.getMyLocation(bulldozer.lestPosition)).thenReturn(map);
+        when(site.getMyLocation(0l, 0l)).thenReturn(map);
         bulldozer.findMe(site);
 
         assertNotNull(bulldozer.findMe(site));

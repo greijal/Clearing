@@ -2,7 +2,6 @@ package com.oracle.clearing.site;
 
 import com.oracle.clearing.site.exception.OutsideBorder;
 import com.oracle.clearing.site.exception.ProtectAreaTree;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.shell.table.ArrayTableModel;
 import org.springframework.shell.table.TableBuilder;
 import org.springframework.shell.table.TableModel;
@@ -25,6 +24,12 @@ public class Site {
     private Matrix2D matrix;
 
 
+    /**
+     * Load site file
+     *
+     * @param file
+     * @throws IOException
+     */
     public void load(File file) throws IOException {
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -37,25 +42,37 @@ public class Site {
 
     }
 
+    /**
+     *
+     * Mark lend visited
+     * @param row
+     * @param col
+     * @return
+     * @throws ProtectAreaTree
+     * @throws OutsideBorder
+     */
     public char visit(long row, long col) throws ProtectAreaTree, OutsideBorder {
-
 
         if ((row > (matrix.getRowCount() - 1) || row < 0) || (col > (matrix.getColumnCount() - 1) || col < 0)) {
             throw new OutsideBorder();
         }
 
-        char point = matrix.getAsChar(row, col);
+        char lend = matrix.getAsChar(row, col);
 
-        if (isProtectAreaTree(point)) {
+        if (isProtectAreaTree(lend)) {
             throw new ProtectAreaTree();
         }
 
         markAsVisited(row, col);
 
-        return point;
+        return lend;
     }
 
-    public List<Character> getUnVisitPoints() {
+    private boolean isProtectAreaTree(Character lend) {
+        return 'T' == lend;
+    }
+
+    public List<Character> getUnVisitLend() {
 
         return StreamSupport
                 .stream(matrix.allValues().spliterator(), false)
@@ -63,11 +80,6 @@ public class Site {
                 .filter(character -> 'x' != character)
                 .filter(character -> 'T' != character)
                 .collect(Collectors.toList());
-    }
-
-
-    private boolean isProtectAreaTree(Character point) {
-        return 'T' == point;
     }
 
     private void markAsVisited(long row, long col) {
@@ -102,9 +114,9 @@ public class Site {
     }
 
 
-    public String getMyLocation(ImmutablePair<Long, Long> lestPosition) {
+    public String getMyLocation(long row, long col) {
         Matrix matrix = this.matrix.clone();
-        matrix.setAsChar('*', lestPosition.getKey(), lestPosition.getValue());
+        matrix.setAsChar('*', row, col);
         return stringMap(matrix);
     }
 

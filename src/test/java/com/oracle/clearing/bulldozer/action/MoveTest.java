@@ -1,9 +1,6 @@
 package com.oracle.clearing.bulldozer.action;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,12 +8,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(MockitoExtension.class)
-@DisplayName("Test Move")
+
 public class MoveTest {
 
     @Test
-    @DisplayName("Create move without points")
     public void createMoveZero() {
 
         Move action = new Move(new LinkedList<>());
@@ -25,51 +20,47 @@ public class MoveTest {
     }
 
     @Test
-    @DisplayName("Create move null points")
     public void createMoveNull() {
         assertThrows(NullPointerException.class, () -> new Move(null));
     }
 
     @Test
-    @DisplayName("Create move")
     public void createMove() {
 
-        List<Character> sitePoints = new LinkedList<>();
-        sitePoints.add('x');
-        sitePoints.add('o');
-        sitePoints.add('o');
-        sitePoints.add('o');
+        List<Character> lends = new LinkedList<>();
+        lends.add('x');
+        lends.add('o');
+        lends.add('o');
+        lends.add('o');
 
-        Move action = new Move(sitePoints);
+        Move action = new Move(lends);
         assertEquals(4, action.getFuel());
 
     }
 
     @Test
-    @DisplayName("Create move damage")
     public void createMoveDamage() {
 
-        List<Character> sitePoints = new LinkedList<>();
-        sitePoints.add('o');
-        sitePoints.add('t');
-        sitePoints.add('t');
-        sitePoints.add('t');
+        List<Character> lends = new LinkedList<>();
+        lends.add('o');
+        lends.add('t');
+        lends.add('t');
+        lends.add('t');
 
-        Move action = new Move(sitePoints);
+        Move action = new Move(lends);
         assertEquals(2, action.getDamage());
     }
 
     @Test
-    @DisplayName("Create move char know")
     public void createMoveKnow() {
 
-        List<Character> sitePoints = new LinkedList<>();
-        sitePoints.add('@');
-        sitePoints.add('*');
-        sitePoints.add('#');
-        sitePoints.add('&');
+        List<Character> lends = new LinkedList<>();
+        lends.add('@');
+        lends.add('*');
+        lends.add('#');
+        lends.add('&');
 
-        Move action = new Move(sitePoints);
+        Move action = new Move(lends);
         assertEquals(0, action.getFuel());
         assertEquals(0, action.getDamage());
 

@@ -2,7 +2,6 @@ package com.oracle.clearing.site;
 
 import com.oracle.clearing.site.exception.OutsideBorder;
 import com.oracle.clearing.site.exception.ProtectAreaTree;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Test;
 import org.ujmp.core.charmatrix.impl.ArrayDenseCharMatrix2D;
 
@@ -22,8 +21,8 @@ public class SiteTest {
         Site site = new Site();
 
 
-            File file = new File("");
-            site.load(file);
+        File file = new File("");
+        site.load(file);
 
     }
 
@@ -60,7 +59,7 @@ public class SiteTest {
 
         site.setMatrix(new ArrayDenseCharMatrix2D(map));
 
-      site.visit(0, 0);
+        site.visit(0, 0);
     }
 
     @Test
@@ -87,7 +86,7 @@ public class SiteTest {
 
         site.setMatrix(new ArrayDenseCharMatrix2D(map));
 
-        List<Character> result = site.getUnVisitPoints();
+        List<Character> result = site.getUnVisitLend();
         assertEquals(1, result.size());
     }
 
@@ -101,7 +100,7 @@ public class SiteTest {
 
         site.setMatrix(new ArrayDenseCharMatrix2D(map));
 
-        String result = site.getMyLocation(new ImmutablePair<Long, Long>(0L, 0L));
+        String result = site.getMyLocation(0l, 0l);
         assertEquals("                   \n" +
                 "*                  \n" +
                 "Caption            \n" +

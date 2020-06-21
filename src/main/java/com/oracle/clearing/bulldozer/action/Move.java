@@ -9,25 +9,25 @@ public class Move extends Action {
     private final int fuel;
     private final int damage;
 
-    public Move(List<Character> sitePoints) {
+    public Move(List<Character> lends) {
         super(Action.MOVE);
-        this.fuel = calculateFuel(sitePoints);
-        this.damage = calculateDamage(sitePoints);
+        this.fuel = calculateFuel(lends);
+        this.damage = calculateDamage(lends);
     }
 
-    private static int calculateDamage(List<Character> sitePoints) {
+    private static int calculateDamage(List<Character> lends) {
 
-        if (!sitePoints.contains('t')) {
+        if (!lends.contains('t')) {
             return 0;
         }
 
-        return (int) IntStream.range(0, sitePoints.size())
-                .filter(idx -> sitePoints.get(idx) == 't' && !(idx == sitePoints.size() - 1))
+        return (int) IntStream.range(0, lends.size())
+                .filter(idx -> lends.get(idx) == 't' && !(idx == lends.size() - 1))
                 .count();
     }
 
-    private static int calculateFuel(List<Character> sitePoints) {
-        return sitePoints.stream().mapToInt(Move::toFuel).sum();
+    private static int calculateFuel(List<Character> lends) {
+        return lends.stream().mapToInt(Move::toFuel).sum();
     }
 
     private static int toFuel(Character character) {

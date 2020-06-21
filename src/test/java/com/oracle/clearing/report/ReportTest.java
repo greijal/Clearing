@@ -33,9 +33,9 @@ public class ReportTest {
         actionList.add(act1);
         actionList.add(act2);
 
-        List<Character> points = new ArrayList<>();
-        points.add('o');
-        points.add('o');
+        List<Character> lends = new ArrayList<>();
+        lends.add('o');
+        lends.add('o');
 
 
         when(act1.getFuel()).thenReturn(10);
@@ -51,7 +51,7 @@ public class ReportTest {
         when(act2.getActionType()).thenReturn(Action.MOVE);
 
         when(bulldozer.getActionsList()).thenReturn(actionList);
-        when(site.getUnVisitPoints()).thenReturn(points);
+        when(site.getUnVisitLend()).thenReturn(lends);
 
         Report report = new Report();
         Table result = report.report(site, bulldozer, true);
@@ -191,11 +191,11 @@ public class ReportTest {
         Report report = new Report();
         Site site = mock(Site.class);
 
-        List<Character> points = new ArrayList<>();
-        points.add('o');
-        points.add('o');
+        List<Character> lends = new ArrayList<>();
+        lends.add('o');
+        lends.add('o');
 
-        when(site.getUnVisitPoints()).thenReturn(points);
+        when(site.getUnVisitLend()).thenReturn(lends);
 
 
         long result = report.calculateUnclearedSquaresQuantity(site);

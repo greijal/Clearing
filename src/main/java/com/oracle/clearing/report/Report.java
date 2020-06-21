@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.stream.IntStream;
 
+
 @Component
 public class Report {
 
@@ -94,7 +95,7 @@ public class Report {
 
     public long calculateUnclearedSquaresQuantity(Site site) {
         return site.
-                getUnVisitPoints().size();
+                getUnVisitLend().size();
     }
 
     public long calculateUnclearedSquaresCost(long quantity) {
