@@ -1,6 +1,6 @@
 package com.oracle.clearing.site;
 
-import org.apache.commons.text.StringSubstitutor;
+import com.oracle.clearing.util.ShellUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,39 +8,57 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.ujmp.core.charmatrix.impl.ArrayDenseCharMatrix2D;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static com.oracle.clearing.site.SiteCommands.*;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Test Site")
+@DisplayName("Test Site command")
 public class SiteCommandsTest {
 
     @Mock
     private Site site;
+    @Mock
+    private ShellUtil shellUtil;
     @InjectMocks
     private SiteCommands siteCommands;
 
 
     @Test()
-    @DisplayName("Erro load file. File not exist")
-    public void loadFileNotExist() {
+    @DisplayName("Error load file. File not exist")
+    public void loadFileNotExist() throws IOException {
 
         File file = new File("");
-        String out = siteCommands.load(file);
-        assertEquals(SiteCommands.ERROR_MESSAGE_FILE, out);
+
+        siteCommands.load(file);
+
+        verify(shellUtil, times(1)).getErrorMessage(ERROR_MESSAGE_FILE);
+        verify(site, never()).load(file);
 
     }
 
     @Test()
-    @DisplayName("Erro load file. IOException")
+    @DisplayName("Load site again")
+    public void loadFileSiteNotNull() throws IOException {
+
+        File file = mock(File.class);
+
+        when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
+        when(file.exists()).thenReturn(true);
+
+        siteCommands.load(file);
+        verify(shellUtil, times(1)).getErrorMessage(ERROR_MESSAGE_SITE_LOAD);
+        verify(site, never()).load(file);
+
+    }
+
+    @Test()
+    @DisplayName("Error load file. IOException")
     public void loadFileIOException() throws IOException {
 
 
@@ -49,31 +67,32 @@ public class SiteCommandsTest {
         when(file.exists()).thenReturn(true);
         doThrow(new IOException()).when(site).load(file);
 
+        siteCommands.load(file);
 
-        String out = siteCommands.load(file);
-        assertEquals(SiteCommands.ERROR_MESSAGE_FILE_LOAD, out);
+        verify(shellUtil, times(1)).getErrorMessage(ERROR_MESSAGE_FILE_LOAD);
+        verify(site, times(1)).load(file);
+
 
     }
 
     @Test()
-    @DisplayName("Load file.")
+    @DisplayName("Load file")
     public void loadFile() throws IOException {
 
         File file = Mockito.mock(File.class);
         String mapString = "0";
-        String mapSize = "[1] X [1]";
 
         when(file.exists()).thenReturn(true);
         when(site.stringMap()).thenReturn(mapString);
-        when(site.stringMapSize()).thenReturn(mapSize);
 
-        String out = siteCommands.load(file);
+        siteCommands.load(file);
 
-        Map<String, String> valuesMap = new HashMap<String, String>();
-        valuesMap.put("map", site.stringMap());
-        valuesMap.put("size", site.stringMapSize());
 
-        assertEquals(new StringSubstitutor(valuesMap).replace(SiteCommands.MESSAGE_LOAD_FILE), out);
+        verify(shellUtil, times(1)).getSuccessMessage(MESSAGE_LOAD_FILE);
+        verify(shellUtil, times(1)).getInfoMessage(MESSAGE_START_QUESTION);
+        verify(shellUtil, times(1)).getInfoMessage("0");
+        verify(site, times(1)).load(file);
+
 
     }
 

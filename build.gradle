@@ -19,15 +19,19 @@ dependencies {
     implementation 'org.springframework.shell:spring-shell-starter:2.0.0.RELEASE'
     implementation 'org.slf4j:jul-to-slf4j'
     implementation 'org.slf4j:log4j-over-slf4j'
+
     implementation 'org.apache.commons:commons-text:1.8'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.ujmp:ujmp-core:0.3.0'
+    implementation 'org.ujmp:ujmp-gui:0.3.0'
 
 
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.2.0')
-    testCompile('org.junit.jupiter:junit-jupiter-params:5.2.0')
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
-    testCompile "org.mockito:mockito-core:2.+"
-    testCompile('org.mockito:mockito-junit-jupiter:2.18.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.2.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.2.0'
+    testImplementation "org.mockito:mockito-core:2.+"
+    testImplementation('org.mockito:mockito-junit-jupiter:2.18.3')
+    testImplementation 'org.junit.platform:junit-platform-runner:1.2.0'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.2.0'
+
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }

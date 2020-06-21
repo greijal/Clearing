@@ -1,5 +1,4 @@
-ootoo
+oot@@
 ooooo
-rrroo
+##roo
 rrrro
-rrrrr

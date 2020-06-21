@@ -1,47 +1,53 @@
 package com.oracle.clearing.site;
 
-import org.apache.commons.text.StringSubstitutor;
-import org.apache.log4j.Logger;
+import com.oracle.clearing.util.ShellUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @ShellComponent()
 public class SiteCommands {
 
     protected static final String ERROR_MESSAGE_FILE = "File not exist. Please try again";
+    protected static final String ERROR_MESSAGE_SITE_LOAD = "Oops... But you've already uploaded a file.";
     protected static final String ERROR_MESSAGE_FILE_LOAD = "Error when loading file. Check the file used";
-    protected static final String MESSAGE_LOAD_FILE = "File load with success \n\n${map} \nSIZE: ${size}";
-    private final Logger LOG = Logger.getLogger(getClass().getName());
+    protected static final String MESSAGE_LOAD_FILE = "Your new site has been successfully uploaded !";
+    protected static final String MESSAGE_START_QUESTION = "Shall we get started?";
+
+
     @Autowired
     private Site site;
+    @Autowired
+    private ShellUtil shellUtil;
 
-    @ShellMethod(value = "Load new site map file", key = "load", group = "site")
-    public String load(File file) {
+    @ShellMethod(value = "Load new site map file", key = {"load"}, group = "site")
+    public void load(@NotNull File file) {
 
         if (!file.exists()) {
-            LOG.info("Unable to upload site. File does not exist FILE - " + file.getPath());
-            return ERROR_MESSAGE_FILE;
+            shellUtil.print(shellUtil.getErrorMessage(ERROR_MESSAGE_FILE));
+            return;
+        }
+
+        if (site.getMatrix() != null) {
+            shellUtil.print(shellUtil.getErrorMessage(ERROR_MESSAGE_SITE_LOAD));
+            return;
         }
 
         try {
             site.load(file);
         } catch (IOException e) {
-            LOG.info("Error when trying to upload the file", e);
-            return ERROR_MESSAGE_FILE_LOAD;
+            shellUtil.print(shellUtil.getErrorMessage(ERROR_MESSAGE_FILE_LOAD));
+            return;
         }
 
+        shellUtil.print(shellUtil.getSuccessMessage(MESSAGE_LOAD_FILE));
+        shellUtil.print(shellUtil.getInfoMessage(site.stringMap()));
+        shellUtil.print(shellUtil.getInfoMessage(MESSAGE_START_QUESTION));
 
-        Map<String, String> valuesMap = new HashMap<String, String>();
-        valuesMap.put("map", site.stringMap());
-        valuesMap.put("size", site.stringMapSize());
-
-        return new StringSubstitutor(valuesMap).replace(MESSAGE_LOAD_FILE);
     }
 }

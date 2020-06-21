@@ -1,17 +1,13 @@
-package com.oracle.clearing.account;
+package com.oracle.clearing.report;
 
 import com.oracle.clearing.bulldozer.Bulldozer;
 import com.oracle.clearing.bulldozer.action.Action;
 import com.oracle.clearing.bulldozer.action.Move;
 import com.oracle.clearing.site.Site;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.table.Table;
+import org.springframework.shell.table.*;
 import org.springframework.stereotype.Component;
-import org.ujmp.core.stringmatrix.calculation.Stem;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 public class Report {
@@ -20,70 +16,126 @@ public class Report {
     private static final long COMMUNICATION_COST = 1;
     private static final long DAMAGE_COST = 2;
     private static final long UNCLEARED_COST = 3;
+    private static final long PROTECTED_TREE_COST = 10;
 
 
-    public void report(){
+    public Table report(Site site, Bulldozer bulldozer, boolean penalty) {
+
+
+        String[][] data = new String[7][];
+
+        data[0] = new String[]{"Item", "Quantity", "Cost"};
+        data[1] = createRowCommunication(bulldozer);
+        data[2] = createRowFuel(bulldozer);
+        data[3] = createRowUncleared(site);
+        data[4] = createRowProtectedTree(penalty);
+        data[5] = createRowDamage(bulldozer);
+        data[6] = createTotalRow(data);
+
+
+        TableModel model = new ArrayTableModel(data);
+
+        TableBuilder tableBuilder = new TableBuilder(model);
+        tableBuilder.addInnerBorder(BorderStyle.fancy_light);
+        tableBuilder.addHeaderBorder(BorderStyle.fancy_double);
+
+        return tableBuilder.build();
 
     }
 
-    protected long calculateUnclearedSquaresQuantity() {
+    private String[] createTotalRow(String[][] dataTable) {
+        String name = "Total";
+        long value = IntStream.range(1, dataTable.length - 1)
+                .mapToLong(idx -> Long.parseLong((dataTable[idx][2])))
+                .sum();
+        return new String[]{name, "", String.valueOf(value)};
+    }
+
+
+    private String[] createRowDamage(Bulldozer bulldozer) {
+        String name = "paint damage to bulldozer";
+        long quantity = calculateDamageQuantity(bulldozer);
+        long cost = calculateDamageCost(quantity);
+        return new String[]{name, String.valueOf(quantity), String.valueOf(cost)};
+    }
+
+    public long calculateDamageQuantity(Bulldozer bulldozer) {
+        return bulldozer.getActionsList()
+                .stream()
+                .filter(action -> action.getActionType() == Action.MOVE)
+                .mapToInt(action -> ((Move) action).getDamage())
+                .sum();
+    }
+
+    public long calculateDamageCost(long quantity) {
+        return quantity * DAMAGE_COST;
+    }
+
+
+    private String[] createRowProtectedTree(boolean event) {
+
+        String name = "destruction of protected tree";
+        long quantity = event ? 1 : 0;
+        long cost = calculateProtectedTreeCost(quantity);
+        return new String[]{name, String.valueOf(quantity), String.valueOf(cost)};
+    }
+
+    public long calculateProtectedTreeCost(long quantity) {
+        return quantity * PROTECTED_TREE_COST;
+    }
+
+
+    private String[] createRowUncleared(Site site) {
+        String name = "uncleared squares";
+        long quantity = calculateUnclearedSquaresQuantity(site);
+        long cost = calculateUnclearedSquaresCost(quantity);
+        return new String[]{name, String.valueOf(quantity), String.valueOf(cost)};
+    }
+
+    public long calculateUnclearedSquaresQuantity(Site site) {
         return site.
-                getUnVisitPoints()
-                .stream()
-                .filter(character -> 'T' != character)
-                .count();
+                getUnVisitPoints().size();
     }
 
-    protected long calculateUnclearedSquaresCost() {
-        return calculateUnclearedSquaresQuantity() * UNCLEARED_COST;
+    public long calculateUnclearedSquaresCost(long quantity) {
+        return quantity * UNCLEARED_COST;
     }
 
 
-    protected long calculateDamageQuantity() {
-        return this
-                .getMoveAction()
+    private String[] createRowFuel(Bulldozer bulldozer) {
+        String name = "fuel usage";
+        long quantity = calculateFuelQuantity(bulldozer);
+        long cost = calculateFuelCost(quantity);
+        return new String[]{name, String.valueOf(quantity), String.valueOf(cost)};
+    }
+
+    public long calculateFuelQuantity(Bulldozer bulldozer) {
+        return bulldozer
+                .getActionsList()
                 .stream()
-                .mapToInt(Move::getDamage)
+                .filter(action -> action.getActionType() == Action.MOVE)
+                .mapToInt(action -> ((Move) action).getFuel())
                 .sum();
     }
 
-    protected long calculateDamageCost() {
-        return this.calculateDamageQuantity() * DAMAGE_COST;
+    public long calculateFuelCost(long quantity) {
+        return quantity * FUEL_COST;
     }
 
-
-    protected long calculateFuelQuantity() {
-        return this
-                .getMoveAction()
-                .stream()
-                .mapToInt(Move::getFuel)
-                .sum();
+    private String[] createRowCommunication(Bulldozer bulldozer) {
+        String name = "communication overhead";
+        long quantity = calculateCommunicationQuantity(bulldozer);
+        long cost = calculateCommunicationCost(quantity);
+        return new String[]{name, String.valueOf(quantity), String.valueOf(cost)};
     }
 
-    protected long calculateFuelCost() {
-        return this.calculateFuelQuantity() * FUEL_COST;
+    public long calculateCommunicationQuantity(Bulldozer bulldozer) {
+        return bulldozer.getActionsList().size();
     }
 
-
-    protected long calculateCommunicationQuantity() {
-        return this.actionsList.size();
+    public long calculateCommunicationCost(long quantity) {
+        return quantity * COMMUNICATION_COST;
     }
 
-    protected long calculateCommunicationCost() {
-        return calculateCommunicationQuantity() * COMMUNICATION_COST;
-    }
-
-    
-    protected List<Move> getMoveAction() {
-        return this.actionsList
-                .stream()
-                .filter(action -> Action.MOVE == action.getAcrionType())
-                .map(action -> (Move) action)
-                .collect(Collectors.toList());
-    }
-    
-    public void addAction(Action action){
-        actionsList.add(action);
-    }
 
 }
