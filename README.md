@@ -21,7 +21,10 @@ Version : 0.0.1-SNAPSHOT
 ```
 ./gradlew clean build   
 ```
-
+or 
+```
+make build
+```
 ### Running script test
 ```
 $ java -jar clearing-0.0.1-SNAPSHOT.jar
