@@ -6,23 +6,20 @@ import com.oracle.clearing.site.Site;
 import com.oracle.clearing.site.exception.OutsideBorder;
 import com.oracle.clearing.site.exception.ProtectAreaTree;
 import com.oracle.clearing.util.ShellUtil;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.table.Table;
 import org.ujmp.core.charmatrix.impl.ArrayDenseCharMatrix2D;
 
 import static com.oracle.clearing.bulldozer.BulldozerCommands.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-@DisplayName("Test Bulldozer Commands")
+@RunWith(MockitoJUnitRunner.class)
 public class BulldozerCommandsTest {
 
     @InjectMocks
@@ -37,7 +34,6 @@ public class BulldozerCommandsTest {
     private Report report;
 
     @Test
-    @DisplayName("Null site")
     public void advanceNullSite() throws ProtectAreaTree, OutsideBorder {
 
 
@@ -51,7 +47,6 @@ public class BulldozerCommandsTest {
 
 
     @Test
-    @DisplayName("Do not move 0")
     public void advance0() throws ProtectAreaTree, OutsideBorder {
 
         bulldozerCommands.advance(0);
@@ -62,7 +57,6 @@ public class BulldozerCommandsTest {
 
 
     @Test
-    @DisplayName("Move")
     public void advance() throws ProtectAreaTree, OutsideBorder {
 
         when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
@@ -75,8 +69,7 @@ public class BulldozerCommandsTest {
 
     }
 
-    @Test
-    @DisplayName("Move on protect tree")
+    @Test(expected = ExitRequest.class)
     public void advanceProtectAreaTree() throws ProtectAreaTree, OutsideBorder {
 
         Table reportTable = mock(Table.class);
@@ -86,7 +79,7 @@ public class BulldozerCommandsTest {
         when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
         when(report.report(site, bulldozer, true)).thenReturn(reportTable);
 
-        assertThrows(ExitRequest.class, () -> bulldozerCommands.advance(3));
+        bulldozerCommands.advance(3);
 
         verify(bulldozer, times(1)).advance(3, site);
         verify(shellUtil, times(1)).getErrorMessage(MESSAGE_MOVE_PROTECT_TREE);
@@ -94,8 +87,7 @@ public class BulldozerCommandsTest {
 
     }
 
-    @Test
-    @DisplayName("Move Outside Border")
+    @Test(expected = ExitRequest.class)
     public void advanceOutside() throws ProtectAreaTree, OutsideBorder {
 
         Table reportTable = mock(Table.class);
@@ -104,8 +96,7 @@ public class BulldozerCommandsTest {
         when(report.report(site, bulldozer, false)).thenReturn(reportTable);
         when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
 
-
-        assertThrows(ExitRequest.class, () -> bulldozerCommands.advance(3));
+        bulldozerCommands.advance(3);
 
         verify(bulldozer, times(1)).advance(3, site);
         verify(shellUtil, times(1)).getErrorMessage(MESSAGE_MOVE_OUT);
@@ -113,8 +104,7 @@ public class BulldozerCommandsTest {
 
     }
 
-    @Test
-    @DisplayName("Move all")
+    @Test(expected = ExitRequest.class)
     public void advanceAll() throws ProtectAreaTree, OutsideBorder {
 
         Table reportTable = mock(Table.class);
@@ -124,7 +114,7 @@ public class BulldozerCommandsTest {
         when(site.getMatrix()).thenReturn(mock(ArrayDenseCharMatrix2D.class));
 
 
-        assertThrows(ExitRequest.class, () -> bulldozerCommands.advance(3));
+        bulldozerCommands.advance(3);
 
         verify(bulldozer, times(1)).advance(3, site);
         verify(shellUtil, times(1)).getSuccessMessage(MESSAGE_MOVE_ALL);
@@ -134,7 +124,6 @@ public class BulldozerCommandsTest {
 
 
     @Test
-    @DisplayName("Turn Left")
     public void turnLeft() {
 
         bulldozerCommands.turnLeft();
@@ -145,7 +134,6 @@ public class BulldozerCommandsTest {
 
 
     @Test
-    @DisplayName("Turn Left")
     public void turnRight() {
 
         bulldozerCommands.turnRight();

@@ -4,28 +4,23 @@ import com.oracle.clearing.bulldozer.Bulldozer;
 import com.oracle.clearing.bulldozer.action.Action;
 import com.oracle.clearing.bulldozer.action.Move;
 import com.oracle.clearing.site.Site;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.shell.table.Table;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-@DisplayName("Test Account")
+
 public class ReportTest {
 
 
     @Test
-    @DisplayName("Create report")
     public void report() {
 
         Bulldozer bulldozer = mock(Bulldozer.class);
@@ -92,7 +87,6 @@ public class ReportTest {
 
 
     @Test
-    @DisplayName("Calculate protected tree cost")
     public void calculateProtectedTreeCost() {
 
         Report report = new Report();
@@ -101,7 +95,6 @@ public class ReportTest {
     }
 
     @Test
-    @DisplayName("Calculate communication quantity ")
     public void calculateCommunicationQuantity() {
         Report report = new Report();
         Bulldozer bulldozer = mock(Bulldozer.class);
@@ -115,7 +108,6 @@ public class ReportTest {
     }
 
     @Test
-    @DisplayName("Calculate communication quantity ")
     public void calculateCommunicationCost() {
         Report report = new Report();
         long result = report.calculateCommunicationCost(1);
@@ -125,7 +117,6 @@ public class ReportTest {
 
 
     @Test
-    @DisplayName("Calculate Fuel quantity")
     public void calculateFuelQuantity() {
         Report report = new Report();
         Bulldozer bulldozer = mock(Bulldozer.class);
@@ -153,7 +144,6 @@ public class ReportTest {
     }
 
     @Test
-    @DisplayName("Calculate Fuel cost")
     public void calculateFuelCost() {
         Report report = new Report();
         long result = report.calculateFuelCost(10);
@@ -162,7 +152,6 @@ public class ReportTest {
 
 
     @Test
-    @DisplayName("Calculate Damage quantity")
     public void calculateDamageQuantity() {
 
         Report report = new Report();
@@ -190,7 +179,6 @@ public class ReportTest {
     }
 
     @Test
-    @DisplayName("Calculate Damage cost")
     public void calculateDamageCost() {
         Report report = new Report();
 
@@ -199,7 +187,6 @@ public class ReportTest {
     }
 
     @Test
-    @DisplayName("Calculate Uncleared Squares quantity")
     public void calculateUnclearedSquaresQuantity() {
         Report report = new Report();
         Site site = mock(Site.class);
@@ -217,7 +204,6 @@ public class ReportTest {
     }
 
     @Test
-    @DisplayName("Calculate Uncleared Squares cost")
     public void calculateUnclearedSquaresCost() {
         Report report = new Report();
 

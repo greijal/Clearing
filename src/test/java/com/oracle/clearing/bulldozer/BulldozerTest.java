@@ -6,25 +6,20 @@ import com.oracle.clearing.site.exception.OutsideBorder;
 import com.oracle.clearing.site.exception.ProtectAreaTree;
 import com.oracle.clearing.util.Direction;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.Test;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-@DisplayName("Test Bulldozer")
+
 public class BulldozerTest {
 
 
     @Test
-    @DisplayName("Do not move")
     public void advanceStop() throws ProtectAreaTree, OutsideBorder {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
@@ -38,7 +33,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Move RIGHT bulldozer")
     public void advanceRight() throws ProtectAreaTree, OutsideBorder {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
@@ -56,7 +50,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Move LEFT bulldozer")
     public void advanceLeft() throws ProtectAreaTree, OutsideBorder {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
@@ -72,7 +65,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Move UP bulldozer")
     public void advanceUp() throws ProtectAreaTree, OutsideBorder {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
@@ -88,7 +80,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Move DOWN bulldozer")
     public void advanceDown() throws ProtectAreaTree, OutsideBorder {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
@@ -103,8 +94,7 @@ public class BulldozerTest {
         assertTrue(lestPosition.getKey() < newPosition.getKey());
     }
 
-    @Test
-    @DisplayName("Move out")
+    @Test(expected = OutsideBorder.class)
     public void advanceTryOut() throws ProtectAreaTree, OutsideBorder {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
@@ -112,14 +102,11 @@ public class BulldozerTest {
         bulldozer.direction = Direction.DOWN;
 
         when(site.visit(anyLong(), anyLong())).thenThrow(new OutsideBorder());
+        bulldozer.advance(3, site);
 
-        assertThrows(OutsideBorder.class, () -> {
-            bulldozer.advance(3, site);
-        });
     }
 
-    @Test
-    @DisplayName("Move out")
+    @Test(expected = ProtectAreaTree.class)
     public void advanceTre() throws ProtectAreaTree, OutsideBorder {
         Bulldozer bulldozer = new Bulldozer();
         Site site = mock(Site.class);
@@ -127,15 +114,11 @@ public class BulldozerTest {
         bulldozer.direction = Direction.DOWN;
 
         when(site.visit(anyLong(), anyLong())).thenThrow(new ProtectAreaTree());
-
-        assertThrows(ProtectAreaTree.class, () -> {
-            bulldozer.advance(3, site);
-        });
+        bulldozer.advance(3, site);
     }
 
 
     @Test
-    @DisplayName("Turn -90 from right")
     public void turnNegative90Right() {
         Bulldozer bulldozer = new Bulldozer();
 
@@ -146,7 +129,6 @@ public class BulldozerTest {
 
 
     @Test
-    @DisplayName("Turn -90 from left")
     public void turnNegative90Left() {
         Bulldozer bulldozer = new Bulldozer();
 
@@ -156,7 +138,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Turn -90 from down")
     public void turnNegative90Down() {
         Bulldozer bulldozer = new Bulldozer();
 
@@ -166,7 +147,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Turn -90 from UP")
     public void turnNegative90Up() {
         Bulldozer bulldozer = new Bulldozer();
 
@@ -176,7 +156,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Turn 90 from right")
     public void turn90Right() {
         Bulldozer bulldozer = new Bulldozer();
 
@@ -188,7 +167,6 @@ public class BulldozerTest {
 
 
     @Test
-    @DisplayName("Turn 90 from left")
     public void turn90Left() {
         Bulldozer bulldozer = new Bulldozer();
 
@@ -198,7 +176,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Turn 90 from down")
     public void turn90Down() {
         Bulldozer bulldozer = new Bulldozer();
 
@@ -208,7 +185,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Turn 90 from UP")
     public void turn90Up() {
         Bulldozer bulldozer = new Bulldozer();
         bulldozer.direction = Direction.UP;
@@ -217,7 +193,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Is Completed Work")
     public void isCompletedWork() {
 
         Site site = mock(Site.class);
@@ -228,7 +203,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Is not Completed Work")
     public void isNotCompletedWork() {
 
         Site site = mock(Site.class);
@@ -239,7 +213,6 @@ public class BulldozerTest {
     }
 
     @Test
-    @DisplayName("Find me")
     public void findMe() {
 
         Site site = mock(Site.class);

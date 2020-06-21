@@ -1,22 +1,19 @@
 package com.oracle.clearing.util;
 
 import org.jline.terminal.Terminal;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.PrintWriter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-@DisplayName("Test ShellUtil")
+@RunWith(MockitoJUnitRunner.class)
 public class ShellUtilTest {
-
 
     @Mock
     private Terminal terminal;
@@ -24,32 +21,26 @@ public class ShellUtilTest {
     private ShellUtil shellUtil;
 
     @Test
-    @DisplayName("Test colored info message")
     public void getInfoMessage() {
         assertEquals("\u001B[36mTEST\u001B[0m", shellUtil.getInfoMessage("TEST"));
     }
 
-
     @Test
-    @DisplayName("Test success info message")
     public void getSuccessMessage() {
         assertEquals("\u001B[32mTEST\u001B[0m", shellUtil.getSuccessMessage("TEST"));
     }
 
     @Test
-    @DisplayName("Test warning info message")
     public void getWarningMessage() {
         assertEquals("\u001B[33mTEST\u001B[0m", shellUtil.getWarningMessage("TEST"));
     }
 
     @Test
-    @DisplayName("Test error info message")
     public void getErrorMessage() {
         assertEquals("\u001B[31mTEST\u001B[0m", shellUtil.getErrorMessage("TEST"));
     }
 
     @Test
-    @DisplayName("Test error info message")
     public void print() {
 
         when(terminal.writer()).thenReturn(mock(PrintWriter.class));

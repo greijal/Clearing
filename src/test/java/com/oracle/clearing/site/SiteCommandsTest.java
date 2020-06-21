@@ -1,13 +1,12 @@
 package com.oracle.clearing.site;
 
 import com.oracle.clearing.util.ShellUtil;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.ujmp.core.charmatrix.impl.ArrayDenseCharMatrix2D;
 
 import java.io.File;
@@ -17,8 +16,7 @@ import static com.oracle.clearing.site.SiteCommands.*;
 import static org.mockito.Mockito.*;
 
 
-@ExtendWith(MockitoExtension.class)
-@DisplayName("Test Site command")
+@RunWith(MockitoJUnitRunner.class)
 public class SiteCommandsTest {
 
     @Mock
@@ -29,8 +27,7 @@ public class SiteCommandsTest {
     private SiteCommands siteCommands;
 
 
-    @Test()
-    @DisplayName("Error load file. File not exist")
+    @Test
     public void loadFileNotExist() throws IOException {
 
         File file = new File("");
@@ -43,7 +40,6 @@ public class SiteCommandsTest {
     }
 
     @Test()
-    @DisplayName("Load site again")
     public void loadFileSiteNotNull() throws IOException {
 
         File file = mock(File.class);
@@ -58,7 +54,6 @@ public class SiteCommandsTest {
     }
 
     @Test()
-    @DisplayName("Error load file. IOException")
     public void loadFileIOException() throws IOException {
 
 
@@ -76,7 +71,6 @@ public class SiteCommandsTest {
     }
 
     @Test()
-    @DisplayName("Load file")
     public void loadFile() throws IOException {
 
         File file = Mockito.mock(File.class);

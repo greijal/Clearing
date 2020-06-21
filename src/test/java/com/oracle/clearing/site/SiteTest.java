@@ -3,10 +3,7 @@ package com.oracle.clearing.site;
 import com.oracle.clearing.site.exception.OutsideBorder;
 import com.oracle.clearing.site.exception.ProtectAreaTree;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.Test;
 import org.ujmp.core.charmatrix.impl.ArrayDenseCharMatrix2D;
 
 import java.io.File;
@@ -14,27 +11,23 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.Assert.assertEquals;
 
-@ExtendWith(MockitoExtension.class)
-@DisplayName("Test Site")
+
 public class SiteTest {
 
 
-    @Test()
-    @DisplayName("Error load file. File not exist")
-    public void loadFileNotExist() {
+    @Test(expected = FileNotFoundException.class)
+    public void loadFileNotExist() throws IOException {
         Site site = new Site();
 
-        assertThrows(FileNotFoundException.class, () -> {
+
             File file = new File("");
             site.load(file);
-        });
+
     }
 
-    @Test()
-    @DisplayName("Load File")
+    @Test
     public void load() throws IOException {
         Site site = new Site();
 
@@ -47,21 +40,19 @@ public class SiteTest {
 
     }
 
-    @Test
-    @DisplayName("Visit outside border")
-    public void visitOut() {
+    @Test(expected = OutsideBorder.class)
+    public void visitOut() throws ProtectAreaTree, OutsideBorder {
         Site site = new Site();
 
         int row = 10;
         int col = 10;
         site.setMatrix(new ArrayDenseCharMatrix2D(1, 1));
 
-        assertThrows(OutsideBorder.class, () -> site.visit(row, col));
+        site.visit(row, col);
     }
 
-    @Test
-    @DisplayName("Visit outside border")
-    public void visitProtectTree() {
+    @Test(expected = ProtectAreaTree.class)
+    public void visitProtectTree() throws ProtectAreaTree, OutsideBorder {
         Site site = new Site();
 
         char[] map = new char[1];
@@ -69,11 +60,10 @@ public class SiteTest {
 
         site.setMatrix(new ArrayDenseCharMatrix2D(map));
 
-        assertThrows(ProtectAreaTree.class, () -> site.visit(0, 0));
+      site.visit(0, 0);
     }
 
     @Test
-    @DisplayName("Visit site")
     public void visit() throws ProtectAreaTree, OutsideBorder {
         Site site = new Site();
 
@@ -88,7 +78,6 @@ public class SiteTest {
     }
 
     @Test
-    @DisplayName("Unvisited site")
     public void getUnvisitedPoints() {
         Site site = new Site();
 
@@ -103,7 +92,6 @@ public class SiteTest {
     }
 
     @Test
-    @DisplayName("Get map location")
     public void getMyLocation() {
 
         Site site = new Site();
@@ -128,7 +116,6 @@ public class SiteTest {
     }
 
     @Test
-    @DisplayName("Get map string")
     public void stringMap() {
 
         Site site = new Site();
