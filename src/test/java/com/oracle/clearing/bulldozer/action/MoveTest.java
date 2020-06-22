@@ -66,4 +66,18 @@ public class MoveTest {
 
     }
 
+    @Test
+    public void toStringTest(){
+        List<Character> lends = new LinkedList<>();
+        lends.add('o');
+        lends.add('t');
+        lends.add('t');
+        lends.add('t');
+
+        Move action = Move.newAction(lends);
+
+        assertEquals("advance 4",action.toString());
+
+    }
+
 }

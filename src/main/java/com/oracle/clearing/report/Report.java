@@ -34,7 +34,6 @@ public class Report {
         return report.toString();
     }
 
-
     private String createCostReport(Site site, Bulldozer bulldozer) {
 
         String[][] data = new String[7][];
