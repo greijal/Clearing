@@ -9,14 +9,22 @@ public class Move extends Action {
     private final List<Character> lends;
     private final int fuel;
     private final int damage;
+    private final boolean penalty;
 
-
-    public Move(List<Character> lends) {
+    private Move(List<Character> lends, Boolean penalty) {
         super(Action.MOVE);
-
         this.fuel = calculateFuel(lends);
         this.damage = calculateDamage(lends);
         this.lends = lends;
+        this.penalty = penalty;
+    }
+
+    public static Move newAction(List<Character> lends){
+        return new Move(lends, false);
+    }
+
+    public static Move newActionPenalty(List<Character> lends){
+        return new Move(lends, true);
     }
 
     private static int calculateDamage(List<Character> lends) {
@@ -55,8 +63,15 @@ public class Move extends Action {
         return damage;
     }
 
+    public boolean isPenalty() {
+        return penalty;
+    }
+
     @Override
     public String toString() {
         return "advance " + this.lends.size();
     }
+
+
+
 }

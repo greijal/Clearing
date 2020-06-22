@@ -7,6 +7,7 @@ public abstract class Action {
 
     private final String actionType;
 
+
     public Action(String actionType) {
         this.actionType = actionType;
     }
@@ -14,4 +15,5 @@ public abstract class Action {
     public String getActionType() {
         return actionType;
     }
+
 }

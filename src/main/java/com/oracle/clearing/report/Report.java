@@ -24,18 +24,18 @@ public class Report {
     private static final long PROTECTED_TREE_COST = 10;
 
 
-    public String createReport(Site site, Bulldozer bulldozer, boolean penalty) {
+    public String create(Site site, Bulldozer bulldozer) {
 
         StringBuilder report = new StringBuilder();
         report.append(createHistoryReport(bulldozer));
         report.append("\n\n");
-        report.append(createCostReport(site, bulldozer, penalty));
+        report.append(createCostReport(site, bulldozer));
 
         return report.toString();
     }
 
 
-    private String createCostReport(Site site, Bulldozer bulldozer, boolean penalty) {
+    private String createCostReport(Site site, Bulldozer bulldozer) {
 
         String[][] data = new String[7][];
 
@@ -43,7 +43,7 @@ public class Report {
         data[1] = createRowCommunication(bulldozer);
         data[2] = createRowFuel(bulldozer);
         data[3] = createRowUncleared(site);
-        data[4] = createRowProtectedTree(penalty);
+        data[4] = createRowProtectedTree(bulldozer);
         data[5] = createRowDamage(bulldozer);
         data[6] = createTotalRow(data);
 
@@ -106,16 +106,25 @@ public class Report {
     }
 
 
-    private String[] createRowProtectedTree(boolean event) {
+    private String[] createRowProtectedTree(Bulldozer bulldozer) {
 
         String name = "destruction of protected tree";
-        long quantity = event ? 1 : 0;
+        long quantity = calculateProtectedTreeQuantity(bulldozer);
         long cost = calculateProtectedTreeCost(quantity);
         return new String[]{name, String.valueOf(quantity), String.valueOf(cost)};
+
     }
 
     private long calculateProtectedTreeCost(long quantity) {
         return quantity * PROTECTED_TREE_COST;
+    }
+
+    private long calculateProtectedTreeQuantity(Bulldozer bulldozer) {
+        return bulldozer.getActionsList()
+                .stream()
+                .filter(action -> action.getActionType() == Action.MOVE)
+                .mapToInt(action -> ((Move) action).isPenalty() ? 1 : 0)
+                .sum();
     }
 
 

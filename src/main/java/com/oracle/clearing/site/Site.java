@@ -39,7 +39,6 @@ public class Site {
         lines.forEach(line -> chars[lines.indexOf(line)] = line.toCharArray());
 
         matrix = new ArrayDenseCharMatrix2D(chars);
-
     }
 
     /**
@@ -123,7 +122,7 @@ public class Site {
     }
 
     public boolean isEmpty() {
-        return matrix==null;
+        return matrix == null;
     }
 
     public Matrix2D getMatrix() {

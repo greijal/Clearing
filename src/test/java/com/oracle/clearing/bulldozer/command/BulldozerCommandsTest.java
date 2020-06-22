@@ -13,17 +13,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.shell.Availability;
 import org.springframework.shell.ExitRequest;
-import org.ujmp.core.charmatrix.impl.ArrayDenseCharMatrix2D;
 
 import static com.oracle.clearing.bulldozer.command.BulldozerCommands.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BulldozerCommandsTest {
 
-    @InjectMocks
-    private BulldozerCommands bulldozerCommands;
     @Mock
     private Site site;
     @Mock
@@ -32,88 +31,75 @@ public class BulldozerCommandsTest {
     private ShellUtil shellUtil;
     @Mock
     private Report report;
-
-    @Test
-    public void advanceNullSite() throws ProtectAreaTree, OutsideBorder {
-
-
-        when(site.isEmpty()).thenReturn(true);
-
-        bulldozerCommands.advance(1);
-
-        verify(bulldozer, never()).advance(1, site);
-        verify(shellUtil, times(1)).getWarningMessage(MESSAGE_MATRIX_NUL);
-    }
-
-
-    @Test
-    public void advance0() throws ProtectAreaTree, OutsideBorder {
-
-        bulldozerCommands.advance(0);
-
-        verify(bulldozer, never()).advance(0, site);
-        verify(shellUtil, times(1)).getWarningMessage(MESSAGE_NOWHERE);
-    }
-
+    @InjectMocks
+    private BulldozerCommands bulldozerCommands;
 
     @Test
     public void advance() throws ProtectAreaTree, OutsideBorder {
 
-        when(site.isEmpty()).thenReturn(false);
+        String meOnMap = "MAP";
 
-        bulldozerCommands.advance(3);
+        when(bulldozer.findMe(site)).thenReturn(meOnMap);
+        when(shellUtil.getSuccessMessage(MESSAGE_MOVE)).thenReturn(MESSAGE_MOVE);
+        when(shellUtil.getInfoMessage(meOnMap)).thenReturn(meOnMap);
+
+        String result = bulldozerCommands.advance(3);
+
+        assertEquals(MESSAGE_MOVE, result);
 
         verify(bulldozer, times(1)).advance(3, site);
         verify(shellUtil, times(1)).getSuccessMessage(MESSAGE_MOVE);
+        verify(shellUtil, times(1)).getInfoMessage(meOnMap);
+
         verify(bulldozer, times(1)).findMe(site);
+
 
     }
 
     @Test(expected = ExitRequest.class)
     public void advanceProtectAreaTree() throws ProtectAreaTree, OutsideBorder {
 
-
+        String reportResult = "REPORT";
         Mockito.doThrow(new ProtectAreaTree()).when(bulldozer).advance(3, site);
 
-        when(site.isEmpty()).thenReturn(false);
-        when(report.createReport(site, bulldozer, true)).thenReturn("reportTable");
+        when(report.create(site, bulldozer)).thenReturn(reportResult);
 
         bulldozerCommands.advance(3);
 
         verify(bulldozer, times(1)).advance(3, site);
         verify(shellUtil, times(1)).getErrorMessage(MESSAGE_MOVE_PROTECT_TREE);
-        verify(report, times(1)).createReport(site, bulldozer, true);
+        verify(shellUtil, times(1)).getInfoMessage(reportResult);
+        verify(report, times(1)).create(site, bulldozer);
 
     }
 
     @Test(expected = ExitRequest.class)
     public void advanceOutside() throws ProtectAreaTree, OutsideBorder {
 
-        Mockito.doThrow(new OutsideBorder()).when(bulldozer).advance(3, site);
-        when(report.createReport(site, bulldozer, false)).thenReturn("");
-        when(site.isEmpty()).thenReturn(false);
+        String reportResult = "REPORT";
+
+        doThrow(new OutsideBorder()).when(bulldozer).advance(3, site);
+        when(report.create(site, bulldozer)).thenReturn(reportResult);
 
         bulldozerCommands.advance(3);
 
         verify(bulldozer, times(1)).advance(3, site);
         verify(shellUtil, times(1)).getErrorMessage(MESSAGE_MOVE_OUT);
-        verify(report, times(1)).createReport(site, bulldozer, false);
+        verify(shellUtil, times(1)).getInfoMessage(reportResult);
+        verify(report, times(1)).create(site, bulldozer);
 
     }
 
     @Test(expected = ExitRequest.class)
     public void advanceAll() throws ProtectAreaTree, OutsideBorder {
 
-
         when(bulldozer.isCompletedWork(site)).thenReturn(true);
-
-        when(site.isEmpty()).thenReturn(false);
 
         bulldozerCommands.advance(3);
 
         verify(bulldozer, times(1)).advance(3, site);
         verify(shellUtil, times(1)).getSuccessMessage(MESSAGE_MOVE_ALL);
-        verify(report, times(1)).createReport(site, bulldozer, false);
+        verify(report, times(1)).create(site, bulldozer);
 
     }
 
@@ -121,47 +107,54 @@ public class BulldozerCommandsTest {
     @Test
     public void turnLeft() {
 
-        when(site.isEmpty()).thenReturn(false);
 
-        bulldozerCommands.turnLeft();
+        String meOnMap = "MAP_SITE";
+
+        when(bulldozer.findMe(site)).thenReturn(meOnMap);
+        when(shellUtil.getInfoMessage(meOnMap)).thenReturn(meOnMap);
+        when(shellUtil.getSuccessMessage(MESSAGE_TURN_LEFT))
+                .thenReturn(MESSAGE_TURN_LEFT);
+
+        String result = bulldozerCommands.turnLeft();
+
+        assertEquals(MESSAGE_TURN_LEFT, result);
         verify(bulldozer, times(1)).turn(-90);
+        verify(shellUtil, times(1)).getInfoMessage(meOnMap);
         verify(shellUtil, times(1)).getSuccessMessage(MESSAGE_TURN_LEFT);
-
-    }
-
-    @Test
-    public void turnLeftNullSite() {
-
-        when(site.isEmpty()).thenReturn(true);
-
-        bulldozerCommands.turnLeft();
-        verify(bulldozer, never()).turn(anyInt());
-        verify(shellUtil, times(1)).getWarningMessage(MESSAGE_MATRIX_NUL);
-
-
-    }
-
-
-    @Test
-    public void turnRightNullSite() {
-
-        when(site.isEmpty()).thenReturn(true);
-
-        bulldozerCommands.turnRight();
-        verify(bulldozer, never()).turn(anyInt());
-        verify(shellUtil, times(1)).getWarningMessage(MESSAGE_MATRIX_NUL);
 
     }
 
     @Test
     public void turnRight() {
 
-        when(site.isEmpty()).thenReturn(false);
+        String meOnMap = "MAP_SITE";
 
-        bulldozerCommands.turnRight();
+        when(bulldozer.findMe(site)).thenReturn(meOnMap);
+        when(shellUtil.getInfoMessage(meOnMap)).thenReturn(meOnMap);
+        when(shellUtil.getSuccessMessage(MESSAGE_TURN_RIGHT))
+                .thenReturn(MESSAGE_TURN_RIGHT);
+
+        String result = bulldozerCommands.turnRight();
+
+        assertEquals(MESSAGE_TURN_RIGHT, result);
         verify(bulldozer, times(1)).turn(90);
+        verify(shellUtil, times(1)).getInfoMessage(meOnMap);
         verify(shellUtil, times(1)).getSuccessMessage(MESSAGE_TURN_RIGHT);
 
+    }
+
+    @Test
+    public void availabilityCheckAvailableTest() {
+        when(site.isEmpty()).thenReturn(false);
+        Availability availability = bulldozerCommands.availabilityCheck();
+        assertTrue(availability.isAvailable());
+    }
+
+    @Test
+    public void availabilityCheckUnavailableTest() {
+        when(site.isEmpty()).thenReturn(true);
+        Availability availability = bulldozerCommands.availabilityCheck();
+        assertFalse(availability.isAvailable());
     }
 
 }

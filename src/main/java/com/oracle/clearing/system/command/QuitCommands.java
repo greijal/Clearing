@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.ExitRequest;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.commands.Quit;
 
 @ShellComponent()
-public class QuitCommands {
+public class QuitCommands implements Quit.Command {
 
     protected static final String MESSAGE_QUIT = "Thank you for using the site clearing simulator.";
 

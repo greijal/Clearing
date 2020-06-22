@@ -38,29 +38,23 @@ public class Bulldozer {
         }
 
         List<Position> steps = calculateNextPosition(numberSteps);
-
         List<Character> lends = new ArrayList<>();
-
 
         for (Position step : steps) {
             try {
                 lends.add(site.visit(step.getRow(), step.getColumn()));
             } catch (OutsideBorder e) {
-
-                actionsList.add(new Move(lends));
+                actionsList.add(Move.newAction(lends));
                 this.lestPosition = step;
                 throw e;
-
-            } catch (ProtectAreaTree e) {
-
-                actionsList.add(new Move(lends));
+            }catch (ProtectAreaTree e){
+                actionsList.add(Move.newActionPenalty(lends));
                 this.lestPosition = step;
                 throw e;
-
             }
         }
 
-        actionsList.add(new Move(lends));
+        actionsList.add(Move.newAction(lends));
         this.lestPosition = steps.get(steps.size() - 1);
 
     }

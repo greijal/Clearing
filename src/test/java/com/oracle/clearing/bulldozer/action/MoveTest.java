@@ -14,14 +14,14 @@ public class MoveTest {
     @Test
     public void createMoveZero() {
 
-        Move action = new Move(new LinkedList<>());
+        Move action =  Move.newAction(new LinkedList<>());
         assertEquals(0, action.getFuel());
         assertEquals(0, action.getDamage());
     }
 
     @Test(expected = NullPointerException.class)
     public void createMoveNull() {
-        new Move(null);
+        Move.newAction(null);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class MoveTest {
         lends.add('o');
         lends.add('o');
 
-        Move action = new Move(lends);
+        Move action = Move.newAction(lends);
         assertEquals(4, action.getFuel());
 
     }
@@ -47,7 +47,7 @@ public class MoveTest {
         lends.add('t');
         lends.add('t');
 
-        Move action = new Move(lends);
+        Move action = Move.newAction(lends);
         assertEquals(2, action.getDamage());
     }
 
@@ -60,7 +60,7 @@ public class MoveTest {
         lends.add('%');
         lends.add('&');
 
-        Move action = new Move(lends);
+        Move action = Move.newAction(lends);
         assertEquals(0, action.getFuel());
         assertEquals(0, action.getDamage());
 

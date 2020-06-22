@@ -5,8 +5,10 @@ import com.oracle.clearing.report.Report;
 import com.oracle.clearing.site.Site;
 import com.oracle.clearing.util.ShellUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 
 @ShellComponent
 public class ReportCommands {
@@ -21,8 +23,15 @@ public class ReportCommands {
     private ShellUtil shellUtil;
 
     @ShellMethod(value = "Print report", key = {"report"})
-    public void report() {
-        shellUtil.print(shellUtil.getInfoMessage(report.createReport(site, bulldozer, false)));
+    @ShellMethodAvailability("availabilityCheck")
+    public String report() {
+        return shellUtil.getInfoMessage(report.create(site, bulldozer));
+    }
+
+    public Availability availabilityCheck() {
+        return site.isEmpty()
+                ? Availability.unavailable("you don't load a site")
+                : Availability.available();
     }
 
 }
