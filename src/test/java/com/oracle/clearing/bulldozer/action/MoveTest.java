@@ -14,7 +14,7 @@ public class MoveTest {
     @Test
     public void createMoveZero() {
 
-        Move action =  Move.newAction(new LinkedList<>());
+        Move action = Move.newAction(new LinkedList<>());
         assertEquals(0, action.getFuel());
         assertEquals(0, action.getDamage());
     }
@@ -67,7 +67,7 @@ public class MoveTest {
     }
 
     @Test
-    public void toStringTest(){
+    public void toStringTest() {
         List<Character> lends = new LinkedList<>();
         lends.add('o');
         lends.add('t');
@@ -76,7 +76,7 @@ public class MoveTest {
 
         Move action = Move.newAction(lends);
 
-        assertEquals("advance 4",action.toString());
+        assertEquals("advance 4", action.toString());
 
     }
 

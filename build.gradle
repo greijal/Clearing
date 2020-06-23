@@ -16,8 +16,8 @@ repositories {
 }
 
 dependencies {
-
-
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.8'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     implementation 'org.ujmp:ujmp-core:0.3.0'
     implementation 'org.springframework.shell:spring-shell-starter:2.0.1.RELEASE'
 
@@ -34,3 +34,24 @@ dependencies {
 bootRun {
     standardInput = System.in
 }
+
+sourceSets {
+    integration {
+        java.srcDir file('src/integTest/java')
+        resources.srcDir file('src/integTest/resources')
+        compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+configurations {
+    integrationImplementation.extendsFrom testImplementation
+    integrationRuntime.extendsFrom testRuntime
+}
+
+task integrationTest(type: Test) {
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath = sourceSets.integration.runtimeClasspath
+}
+
+check.dependsOn integrationTest

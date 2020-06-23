@@ -1,0 +1,39 @@
+{
+   "steps":[
+      {
+         "order":0,
+         "command":"load site.txt",
+         "result":"\u001B[32mYour new site has been successfully uploaded !\nShall we get started ?\u001B[0m"
+      },
+      {
+         "order":1,
+         "command":"a 1",
+         "result":"\u001B[32mBulldozer advance\u001B[0m"
+      },
+      {
+         "order":2,
+         "command":"r",
+         "result":"\u001B[32mBulldozer turn right\u001B[0m"
+      },
+      {
+         "order":3,
+         "command":"a 4",
+         "result":"\u001B[32mBulldozer advance\u001B[0m"
+      },
+      {
+         "order":4,
+         "command":"l",
+         "result":"\u001B[32mBulldozer turn left\u001B[0m"
+      },
+      {
+         "order":5,
+         "command":"report",
+         "result":"\u001B[37mThese are the commands you issued:         \n                                           \nadvance 1, turn DOWN, advance 4, turn RIGHT\n\n\n╔═════════════════════════════╤════════╤════╗\n║Item                         │Quantity│Cost║\n╠═════════════════════════════╪════════╪════╣\n║communication overhead       │4       │4   ║\n╟─────────────────────────────┼────────┼────╢\n║fuel usage                   │8       │8   ║\n╟─────────────────────────────┼────────┼────╢\n║uncleared squares            │43      │129 ║\n╟─────────────────────────────┼────────┼────╢\n║destruction of protected tree│0       │0   ║\n╟─────────────────────────────┼────────┼────╢\n║paint damage to bulldozer    │0       │0   ║\n╟─────────────────────────────┼────────┼────╢\n║Total                        │        │141 ║\n╚═════════════════════════════╧════════╧════╝\n\u001B[0m"
+      },
+      {
+         "order":6,
+         "command":"q",
+         "result":"org.springframework.shell.ExitRequest"
+      }
+   ]
+}

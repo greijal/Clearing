@@ -8,10 +8,10 @@ import static org.junit.Assert.assertEquals;
 public class ChangeDirectionTest {
 
     @Test
-    public void toStringTest(){
+    public void toStringTest() {
 
         ChangeDirection changeDirection = new ChangeDirection(Direction.RIGHT);
-        assertEquals("turn RIGHT",changeDirection.toString());
+        assertEquals("turn RIGHT", changeDirection.toString());
 
     }
 }

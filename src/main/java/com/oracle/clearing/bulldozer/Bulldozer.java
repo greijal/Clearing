@@ -47,7 +47,7 @@ public class Bulldozer {
                 actionsList.add(Move.newAction(lends));
                 this.lestPosition = step;
                 throw e;
-            }catch (ProtectAreaTree e){
+            } catch (ProtectAreaTree e) {
                 actionsList.add(Move.newActionPenalty(lends));
                 this.lestPosition = step;
                 throw e;

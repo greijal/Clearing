@@ -19,11 +19,11 @@ public class Move extends Action {
         this.penalty = penalty;
     }
 
-    public static Move newAction(List<Character> lends){
+    public static Move newAction(List<Character> lends) {
         return new Move(lends, false);
     }
 
-    public static Move newActionPenalty(List<Character> lends){
+    public static Move newActionPenalty(List<Character> lends) {
         return new Move(lends, true);
     }
 
@@ -71,7 +71,6 @@ public class Move extends Action {
     public String toString() {
         return "advance " + this.lends.size();
     }
-
 
 
 }

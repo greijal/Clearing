@@ -25,7 +25,20 @@ or
 ```
 make build
 ```
-### Running script test
+
+### Run Unit Test
+
+```
+ ./gradlew test
+```
+
+### Run Integration Test
+
+```
+./gradlew integrationTest  
+```
+
+### Running Script
 ```
 $ java -jar clearing-0.0.1-SNAPSHOT.jar
 clearing >> script --file script.txt
